@@ -64,55 +64,62 @@ static const char *termcmd[]    = { "alacritty", NULL };
 static const char *browsercmd[] = { "google-chrome-stable", NULL };
 static const char *editorcmd[]  = { "emacsclient", "-c", "-a", "emacs", NULL };
 
+static const char *poweroffcmd[]  = { "sudo", "poweroff", NULL };
+static const char *rebootcmd[]  = { "sudo", "reboot", NULL };
+
 static Key keys[] = {
-	/* modifier         key        function        argument */
+	// System
+	{ MODKEY|ShiftMask, XK_r,      quit,           {0} }, // Refresh
+	{ MODKEY,           XK_w,      killclient,     {0} },
+	{ MODKEY|ShiftMask|ControlMask, XK_q, spawn,   {.v = poweroffcmd } },
+	{ MODKEY|ShiftMask|ControlMask, XK_r, spawn,   {.v = poweroffcmd } },
+
+	// Programs
 	{ MODKEY,           XK_p,      spawn,          {.v = dmenucmd } },
 	{ MODKEY,           XK_Return, spawn,          {.v = termcmd } },
 	{ MODKEY,           XK_n,      spawn,          {.v = browsercmd } },
 	{ MODKEY,           XK_e,      spawn,          {.v = editorcmd } },
-	{ MODKEY,           XK_b,      togglebar,      {0} },
+
+	// Focus
 	{ MODKEY,           XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,           XK_k,      focusstack,     {.i = -1 } },
 	{ MODKEY,           XK_m,      focusmaster,    {0} },
+
+	// Zoom
+	{ MODKEY,           XK_BackSpace, zoom,           {0} },
+
+	// Rotate
 	{ MODKEY,           XK_Tab,    rotatestack,    {.i = +1 } },
 	{ MODKEY,           XK_Tab,    focusstack,     {.i = -1 } },
 	{ MODKEY|ShiftMask, XK_Tab,    rotatestack,    {.i = -1 } },
 	{ MODKEY|ShiftMask, XK_Tab,    focusstack,     {.i = +1 } },
+
+	// Master stack
 	{ MODKEY,           XK_equal,  incnmaster,     {.i = +1 } },
 	{ MODKEY,           XK_minus,  incnmaster,     {.i = -1 } },
+
+	// Resize
 	{ MODKEY|ShiftMask, XK_h,      setmfact,       {.f = -0.05} },
 	{ MODKEY|ShiftMask, XK_l,      setmfact,       {.f = +0.05} },
 	{ MODKEY|ShiftMask, XK_j,      setcfact,       {.f = +0.25} },
 	{ MODKEY|ShiftMask, XK_k,      setcfact,       {.f = -0.25} },
 	{ MODKEY|ShiftMask, XK_n,      setcfact,       {.f =  0.00} },
-	{ MODKEY,           XK_BackSpace, zoom,           {0} },
-	{ MODKEY,           XK_s,      view,           {0} },
-	{ MODKEY,           XK_w,      killclient,     {0} },
-	//{ MODKEY|ShiftMask, XK_space,  setlayout,      {.v = &layouts[0]} },
+
+	// Layout
+	{ MODKEY,           XK_b,      togglebar,      {0} },
 	{ MODKEY,           XK_f,      setlayout,      {.v = &layouts[1]} },
 	{ MODKEY,           XK_space,  setlayout,      {0} },
 	{ MODKEY,           XK_t,      togglefloating, {0} },
 	{ MODKEY,           XK_r,      togglermaster,  {0} },
-	{ MODKEY,                       XK_Down,   moveresize,     {.v = "0x 25y 0w 0h" } },
-	{ MODKEY,                       XK_Up,     moveresize,     {.v = "0x -25y 0w 0h" } },
-	{ MODKEY,                       XK_Right,  moveresize,     {.v = "25x 0y 0w 0h" } },
-	{ MODKEY,                       XK_Left,   moveresize,     {.v = "-25x 0y 0w 0h" } },
-	{ MODKEY|ShiftMask,             XK_Down,   moveresize,     {.v = "0x 0y 0w 25h" } },
-	{ MODKEY|ShiftMask,             XK_Up,     moveresize,     {.v = "0x 0y 0w -25h" } },
-	{ MODKEY|ShiftMask,             XK_Right,  moveresize,     {.v = "0x 0y 25w 0h" } },
-	{ MODKEY|ShiftMask,             XK_Left,   moveresize,     {.v = "0x 0y -25w 0h" } },
-	{ MODKEY|ControlMask,           XK_Up,     moveresizeedge, {.v = "t"} },
-	{ MODKEY|ControlMask,           XK_Down,   moveresizeedge, {.v = "b"} },
-	{ MODKEY|ControlMask,           XK_Left,   moveresizeedge, {.v = "l"} },
-	{ MODKEY|ControlMask,           XK_Right,  moveresizeedge, {.v = "r"} },
-	{ MODKEY|ControlMask|ShiftMask, XK_Up,     moveresizeedge, {.v = "T"} },
-	{ MODKEY|ControlMask|ShiftMask, XK_Down,   moveresizeedge, {.v = "B"} },
-	{ MODKEY|ControlMask|ShiftMask, XK_Left,   moveresizeedge, {.v = "L"} },
-	{ MODKEY|ControlMask|ShiftMask, XK_Right,  moveresizeedge, {.v = "R"} },
+
+	// Monitors
 	{ MODKEY,           XK_comma,  focusmon,       {.i = +1 } },
 	{ MODKEY,           XK_period, focusmon,       {.i = -1 } },
 	{ MODKEY|ShiftMask, XK_comma,  tagmon,         {.i = +1 } },
 	{ MODKEY|ShiftMask, XK_period, tagmon,         {.i = -1 } },
+
+	// Tags
+	{ MODKEY,           XK_s,      view,           {0} },
 	TAGKEYS(            XK_1,                      0)
 	TAGKEYS(            XK_2,                      1)
 	TAGKEYS(            XK_3,                      2)
@@ -124,7 +131,26 @@ static Key keys[] = {
 	TAGKEYS(            XK_9,                      8)
 	{ MODKEY,           XK_0,      view,           {.ui = ~0 } },
 	{ MODKEY|ShiftMask, XK_0,      tag,            {.ui = ~0 } },
-	{ MODKEY|ShiftMask, XK_r,      quit,           {0} }, // refresh dwm
+
+	// Float control
+	{ MODKEY,                       XK_Down,  moveresize,     {.v = "0x 25y 0w 0h" } },
+	{ MODKEY,                       XK_Up,    moveresize,     {.v = "0x -25y 0w 0h" } },
+	{ MODKEY,                       XK_Right, moveresize,     {.v = "25x 0y 0w 0h" } },
+	{ MODKEY,                       XK_Left,  moveresize,     {.v = "-25x 0y 0w 0h" } },
+	{ MODKEY|ShiftMask,             XK_Down,  moveresize,     {.v = "0x 0y 0w 25h" } },
+	{ MODKEY|ShiftMask,             XK_Up,    moveresize,     {.v = "0x 0y 0w -25h" } },
+	{ MODKEY|ShiftMask,             XK_Right, moveresize,     {.v = "0x 0y 25w 0h" } },
+	{ MODKEY|ShiftMask,             XK_Left,  moveresize,     {.v = "0x 0y -25w 0h" } },
+	{ MODKEY|ControlMask,           XK_Up,    moveresizeedge, {.v = "t"} },
+	{ MODKEY|ControlMask,           XK_Down,  moveresizeedge, {.v = "b"} },
+	{ MODKEY|ControlMask,           XK_Left,  moveresizeedge, {.v = "l"} },
+	{ MODKEY|ControlMask,           XK_Right, moveresizeedge, {.v = "r"} },
+	{ MODKEY|ControlMask|ShiftMask, XK_Up,    moveresizeedge, {.v = "T"} },
+	{ MODKEY|ControlMask|ShiftMask, XK_Down,  moveresizeedge, {.v = "B"} },
+	{ MODKEY|ControlMask|ShiftMask, XK_Left,  moveresizeedge, {.v = "L"} },
+	{ MODKEY|ControlMask|ShiftMask, XK_Right, moveresizeedge, {.v = "R"} },
+
+	// Audio
 	{ 0, XF86XK_AudioMute,        spawn, SHCMD("pulsemixer --toggle-mute; if pulsemixer --get-mute | grep -Fq 1; then volnoti-show -m; else volnoti-show $(pulsemixer --get-volume | cut -d' ' -f1); fi") },
 	{ 0, XF86XK_AudioRaiseVolume, spawn, SHCMD("pulsemixer --change-volume +5; pulsemixer --max-volume 100; volnoti-show $(pulsemixer --get-volume | cut -d' ' -f1)") },
 	{ 0, XF86XK_AudioLowerVolume, spawn, SHCMD("pulsemixer --change-volume -5; volnoti-show $(pulsemixer --get-volume | cut -d' ' -f1)") },
