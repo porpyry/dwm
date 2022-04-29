@@ -37,13 +37,13 @@ static const Rule rules[] = {
 static const float mfact        = 0.5; /* factor of master area size [0.05..0.95] */
 static const int nmaster        = 1;   /* number of clients in master area */
 static const int resizehints    = 1;   /* 1 means respect size hints in tiled resizals */
-static const int lockfullscreen = 1;   /* 1 will force focus on the fullscreen window */
+static const int lockfullscreen = 0;   /* 1 will force focus on the fullscreen window */
 
 static const Layout layouts[] = {
 	/* symbol     arrange function */
 	{ "[]=",      tile },    /* first entry is default */
 	//{ "><>",      NULL },    /* no layout function means floating behavior */
-	//{ "[M]",      monocle },
+	{ "[M]",      monocle },
 };
 
 /* key definitions */
@@ -74,7 +74,9 @@ static Key keys[] = {
 	{ MODKEY,           XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,           XK_k,      focusstack,     {.i = -1 } },
 	{ MODKEY,           XK_Tab,    rotatestack,    {.i = +1 } },
+	{ MODKEY,           XK_Tab,    focusstack,     {.i = -1 } },
 	{ MODKEY|ShiftMask, XK_Tab,    rotatestack,    {.i = -1 } },
+	{ MODKEY|ShiftMask, XK_Tab,    focusstack,     {.i = +1 } },
 	{ MODKEY,           XK_comma,  incnmaster,     {.i = +1 } },
 	{ MODKEY,           XK_period, incnmaster,     {.i = -1 } },
 	{ MODKEY,           XK_h,      setmfact,       {.f = -0.05} },
@@ -82,16 +84,15 @@ static Key keys[] = {
 	{ MODKEY,           XK_u,      setcfact,       {.f = +0.25} },
 	{ MODKEY,           XK_i,      setcfact,       {.f = -0.25} },
 	{ MODKEY,           XK_o,      setcfact,       {.f =  0.00} },
-	{ MODKEY,           XK_m,      zoom,           {0} },
+	{ MODKEY,           XK_BackSpace, zoom,           {0} },
 	{ MODKEY,           XK_s,      view,           {0} },
 	{ MODKEY,           XK_w,      killclient,     {0} },
 	{ MODKEY|ShiftMask, XK_space,  setlayout,      {.v = &layouts[0]} },
 	//{ MODKEY,           XK_d,      setlayout,      {.v = &layouts[1]} },
-	//{ MODKEY,           XK_f,      setlayout,      {.v = &layouts[2]} },
-	//{ MODKEY,           XK_space,  setlayout,      {0} },
+	{ MODKEY,           XK_f,      setlayout,      {.v = &layouts[1]} },
+	{ MODKEY,           XK_space,  setlayout,      {0} },
 	{ MODKEY,           XK_t,      togglefloating, {0} },
 	{ MODKEY,           XK_r,      togglermaster,  {0} },
-	{ MODKEY,           XK_f,      togglefullscreen, {0} },
 	//{ MODKEY,           XK_u,      focusmon,       {.i = +1 } },
 	//{ MODKEY,           XK_i,      focusmon,       {.i = -1 } },
 	//{ MODKEY|ShiftMask, XK_u,      tagmon,         {.i = +1 } },
