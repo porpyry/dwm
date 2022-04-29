@@ -88,6 +88,8 @@ static Key keys[] = {
 	//{ MODKEY,           XK_space,  setlayout,      {0} },
 	{ MODKEY,           XK_t,      togglefloating, {0} },
 	{ MODKEY,           XK_r,      togglermaster,  {0} },
+	{ MODKEY,           XK_f,      togglefullscreen, {0} },
+
 	//{ MODKEY,           XK_u,      focusmon,       {.i = +1 } },
 	//{ MODKEY,           XK_i,      focusmon,       {.i = -1 } },
 	//{ MODKEY|ShiftMask, XK_u,      tagmon,         {.i = +1 } },
