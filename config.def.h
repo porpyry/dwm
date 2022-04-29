@@ -11,7 +11,7 @@ static const char dmenufont[]      = "JetBrains Mono:size=12";
 static const char col_nf[]         = "#000000";
 static const char col_nb[]         = "#ffffff";
 static const char col_sf[]         = "#000000";
-static const char col_sb[]         = "#eeeeee";
+static const char col_sb[]         = "#cccccc";
 static const char col_nB[]         = "#000000";
 static const char col_sB[]         = "#ffffff";
 static const char *colors[][3]     = {
@@ -72,8 +72,8 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask|ControlMask, XK_r, spawn,   SHCMD("sudo reboot") },
 
 	// Programs
-	{ MODKEY,           XK_p,      spawn,          {.v = dmenucmd } },
-	{ MODKEY,           XK_Return, spawn,          {.v = termcmd } },
+	{ MODKEY,           XK_q,      spawn,          {.v = dmenucmd } },
+	{ MODKEY,           XK_a,      spawn,          {.v = termcmd } },
 	{ MODKEY,           XK_n,      spawn,          {.v = browsercmd } },
 	{ MODKEY,           XK_e,      spawn,          {.v = editorcmd } },
 
@@ -83,7 +83,7 @@ static Key keys[] = {
 	{ MODKEY,           XK_m,      focusmaster,    {0} },
 
 	// Zoom
-	{ MODKEY,           XK_BackSpace, zoom,           {0} },
+	{ MODKEY,           XK_Return, zoom,           {0} },
 
 	// Rotate
 	{ MODKEY,           XK_Tab,    rotatestack,    {.i = +1 } },
@@ -96,17 +96,18 @@ static Key keys[] = {
 	{ MODKEY,           XK_minus,  incnmaster,     {.i = -1 } },
 
 	// Resize
-	{ MODKEY|ShiftMask, XK_h,      setmfact,       {.f = -0.05} },
-	{ MODKEY|ShiftMask, XK_l,      setmfact,       {.f = +0.05} },
-	{ MODKEY|ShiftMask, XK_j,      setcfact,       {.f = +0.25} },
-	{ MODKEY|ShiftMask, XK_k,      setcfact,       {.f = -0.25} },
-	{ MODKEY|ShiftMask, XK_n,      setcfact,       {.f =  0.00} },
+	{ MODKEY,           XK_h,      setmfact,       {.f = -0.03} },
+	{ MODKEY,           XK_l,      setmfact,       {.f = +0.03} },
+	{ MODKEY,           XK_o,      setmfact,       {.f = 1.0 + mfact } },
+	{ MODKEY|ShiftMask, XK_h,      setcfact,       {.f = +0.15} },
+	{ MODKEY|ShiftMask, XK_l,      setcfact,       {.f = -0.15} },
+	{ MODKEY|ShiftMask, XK_o,      setcfact,       {.f =  0.00} },
 
 	// Layout
-	{ MODKEY,           XK_b,      togglebar,      {0} },
+	{ MODKEY,           XK_v,      togglebar,      {0} },
 	{ MODKEY,           XK_f,      setlayout,      {.v = &layouts[1]} },
-	{ MODKEY,           XK_space,  setlayout,      {0} },
-	{ MODKEY,           XK_t,      togglefloating, {0} },
+	//{ MODKEY,           XK_space,  setlayout,      {0} }, // toggle layout
+	{ MODKEY,           XK_space,  togglefloating, {0} },
 	{ MODKEY,           XK_r,      togglermaster,  {0} },
 
 	// Monitors
