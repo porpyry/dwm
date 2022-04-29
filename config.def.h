@@ -79,6 +79,9 @@ static Key keys[] = {
 	{ MODKEY,           XK_period, incnmaster,     {.i = -1 } },
 	{ MODKEY,           XK_h,      setmfact,       {.f = -0.05} },
 	{ MODKEY,           XK_l,      setmfact,       {.f = +0.05} },
+	{ MODKEY,           XK_u,      setcfact,       {.f = +0.25} },
+	{ MODKEY,           XK_i,      setcfact,       {.f = -0.25} },
+	{ MODKEY,           XK_o,      setcfact,       {.f =  0.00} },
 	{ MODKEY,           XK_m,      zoom,           {0} },
 	{ MODKEY,           XK_s,      view,           {0} },
 	{ MODKEY,           XK_w,      killclient,     {0} },
@@ -89,7 +92,6 @@ static Key keys[] = {
 	{ MODKEY,           XK_t,      togglefloating, {0} },
 	{ MODKEY,           XK_r,      togglermaster,  {0} },
 	{ MODKEY,           XK_f,      togglefullscreen, {0} },
-
 	//{ MODKEY,           XK_u,      focusmon,       {.i = +1 } },
 	//{ MODKEY,           XK_i,      focusmon,       {.i = -1 } },
 	//{ MODKEY|ShiftMask, XK_u,      tagmon,         {.i = +1 } },
