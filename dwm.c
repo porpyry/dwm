@@ -913,8 +913,10 @@ focusmaster(const Arg *arg)
 
 	c = nexttiled(selmon->clients);
 
-	if (c)
+	if (c) {
 		focus(c);
+		restack(selmon);
+	}
 }
 
 void
