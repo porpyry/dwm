@@ -3,6 +3,7 @@
 /* appearance */
 static const unsigned int borderpx = 2;        /* border pixel of windows */
 static const unsigned int snap     = 32;       /* snap pixel */
+static const int rmaster           = 1;        /* 1 means master-area is initially on the right */
 static const int showbar           = 0;        /* 0 means no bar */
 static const int topbar            = 0;        /* 0 means bottom bar */
 static const char *fonts[]         = { "JetBrains Mono:size=12" };
@@ -86,6 +87,7 @@ static Key keys[] = {
 	//{ MODKEY,           XK_f,      setlayout,      {.v = &layouts[2]} },
 	//{ MODKEY,           XK_space,  setlayout,      {0} },
 	{ MODKEY,           XK_t,      togglefloating, {0} },
+	{ MODKEY,           XK_r,      togglermaster,  {0} },
 	//{ MODKEY,           XK_u,      focusmon,       {.i = +1 } },
 	//{ MODKEY,           XK_i,      focusmon,       {.i = -1 } },
 	//{ MODKEY|ShiftMask, XK_u,      tagmon,         {.i = +1 } },
