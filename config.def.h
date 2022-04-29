@@ -64,15 +64,12 @@ static const char *termcmd[]    = { "alacritty", NULL };
 static const char *browsercmd[] = { "google-chrome-stable", NULL };
 static const char *editorcmd[]  = { "emacsclient", "-c", "-a", "emacs", NULL };
 
-static const char *poweroffcmd[]  = { "sudo", "poweroff", NULL };
-static const char *rebootcmd[]  = { "sudo", "reboot", NULL };
-
 static Key keys[] = {
 	// System
 	{ MODKEY|ShiftMask, XK_r,      quit,           {0} }, // Refresh
 	{ MODKEY,           XK_w,      killclient,     {0} },
-	{ MODKEY|ShiftMask|ControlMask, XK_q, spawn,   {.v = poweroffcmd } },
-	{ MODKEY|ShiftMask|ControlMask, XK_r, spawn,   {.v = poweroffcmd } },
+	{ MODKEY|ShiftMask|ControlMask, XK_q, spawn,   SHCMD("sudo poweroff") },
+	{ MODKEY|ShiftMask|ControlMask, XK_r, spawn,   SHCMD("sudo reboot") },
 
 	// Programs
 	{ MODKEY,           XK_p,      spawn,          {.v = dmenucmd } },
