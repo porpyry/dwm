@@ -62,7 +62,8 @@ static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() 
 static const char *dmenucmd[]   = { "dmenu_run", "-b", "-m", dmenumon, "-fn", dmenufont, "-nb", col_nb, "-nf", col_nf, "-sb", col_sb, "-sf", col_sf, NULL };
 static const char *termcmd[]    = { "alacritty", NULL };
 static const char *browsercmd[] = { "google-chrome-stable", NULL };
-static const char *editorcmd[]  = { "emacsclient", "-c", "-a", "emacs", NULL };
+static const char *editorcmd[]  = { "emacsclient", "-c", "-a", "", NULL };
+static const char *bgimagecmd[]  = { "nitrogen", "--random", "--set-zoom-fill", NULL };
 
 static Key keys[] = {
 	// System
@@ -76,6 +77,7 @@ static Key keys[] = {
 	{ MODKEY,           XK_a,      spawn,          {.v = termcmd } },
 	{ MODKEY,           XK_n,      spawn,          {.v = browsercmd } },
 	{ MODKEY,           XK_e,      spawn,          {.v = editorcmd } },
+	{ MODKEY,           XK_b,      spawn,          {.v = bgimagecmd } },
 
 	// Focus
 	{ MODKEY,           XK_j,      focusstack,     {.i = +1 } },
