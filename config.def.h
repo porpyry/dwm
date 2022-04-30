@@ -65,6 +65,7 @@ static const char *browsercmd[] = { "google-chrome-stable", NULL };
 static const char *editorcmd[]  = { "emacsclient", "-c", "-a", "", NULL };
 static const char *bgimagecmd[]  = { "nitrogen", "--random", "--set-zoom-fill", NULL };
 
+#include "movestack.c"
 static Key keys[] = {
 	// System
 	{ MODKEY|ShiftMask, XK_r,      quit,           {0} }, // Refresh
@@ -84,8 +85,10 @@ static Key keys[] = {
 	{ MODKEY,           XK_k,      focusstack,     {.i = -1 } },
 	{ MODKEY,           XK_m,      focusmaster,    {0} },
 
-	// Zoom
+	// Zoom, swap
 	{ MODKEY,           XK_Return, zoom,           {0} },
+	{ MODKEY|ShiftMask, XK_j,      movestack,      {.i = +1 } },
+	{ MODKEY|ShiftMask, XK_k,      movestack,      {.i = -1 } },
 
 	// Rotate
 	{ MODKEY,           XK_Tab,    rotatestack,    {.i = +1 } },
@@ -93,7 +96,7 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask, XK_Tab,    rotatestack,    {.i = -1 } },
 	{ MODKEY|ShiftMask, XK_Tab,    focusstack,     {.i = +1 } },
 
-	// Master stack
+	// Master stack number
 	{ MODKEY,           XK_equal,  incnmaster,     {.i = +1 } },
 	{ MODKEY,           XK_minus,  incnmaster,     {.i = -1 } },
 
