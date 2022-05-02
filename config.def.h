@@ -87,6 +87,7 @@ static Key keys[] = {
 	{ MODKEY,           XK_Tab,    focusstack,     {.i = +1 } },
 	{ MODKEY|ShiftMask, XK_Tab,    focusstack,     {.i = -1 } },
 	{ MODKEY,           XK_m,      focusmaster,    {0} },
+	{ MODKEY,           XK_a,      swapfocus,      {0} },
 
 	// Zoom, swap
 	{ MODKEY,           XK_backslash, zoom,        {0} },
