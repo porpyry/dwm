@@ -2,6 +2,7 @@
 
 /* appearance */
 static const unsigned int borderpx = 2;        /* border pixel of windows */
+static const unsigned int gappx    = 4;        /* gap pixel between windows */
 static const unsigned int snap     = 32;       /* snap pixel */
 static const int rmaster           = 1;        /* 1 means master-area is initially on the right */
 static const int showbar           = 0;        /* 0 means no bar */

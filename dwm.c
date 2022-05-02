@@ -1984,7 +1984,7 @@ tagmon(const Arg *arg)
 void
 tile(Monitor *m)
 {
-	unsigned int i, n, h, mw, my, ty;
+	unsigned int i, n, h, mw, my, ty, ns;
 	float mfacts = 0, sfacts = 0;
 	Client *c;
 
@@ -1997,26 +1997,29 @@ tile(Monitor *m)
 	if (n == 0)
 		return;
 
-	if (n > m->nmaster)
+	if (n > m->nmaster) {
 	    mw = m->nmaster
 			? m->ww * (m->rmaster ? 1.0 - m->mfact : m->mfact)
 			: 0;
-	else
+		ns = m->nmaster > 0 ? 2 : 1;
+	} else {
 		mw = m->ww;
-	for (i = my = ty = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), i++)
+		ns = 1;
+	}
+	for (i = 0, my = ty = gappx, c = nexttiled(m->clients); c; c = nexttiled(c->next), i++)
 		if (i < m->nmaster) {
-			h = (m->wh - my) * (c->cfact / mfacts);
-			resize(c, m->rmaster ? m->wx + m->ww - mw : m->wx,
-				m->wy + my, mw - (2*c->bw), h - (2*c->bw), 0);
+			h = (m->wh - my) * (c->cfact / mfacts) - gappx;
+			resize(c, m->rmaster ? m->wx + gappx/ns + m->ww - mw : m->wx + gappx,
+				m->wy + my, mw - (2*c->bw) - gappx*(5-ns)/2, h - (2*c->bw), False);
 			if (my + HEIGHT(c) < m->wh)
-				my += HEIGHT(c);
+				my += HEIGHT(c) + gappx;
 			mfacts -= c->cfact;
 		} else {
-			h = (m->wh - ty) * (c->cfact / sfacts);
-			resize(c, m->rmaster ? m->wx : m->wx + mw, m->wy + ty,
-				m->ww - mw - (2*c->bw), h - (2*c->bw), 0);
+			h = (m->wh - ty) * (c->cfact / sfacts) - gappx;
+			resize(c, m->rmaster ? m->wx + gappx : m->wx + gappx/ns + mw,
+				m->wy + ty, m->ww - mw - (2*c->bw) - gappx*(5-ns)/2, h - (2*c->bw), False);
 			if (ty + HEIGHT(c) < m->wh)
-				ty += HEIGHT(c);
+				ty += HEIGHT(c) + gappx;
 			sfacts -= c->cfact;
 		}
 }
