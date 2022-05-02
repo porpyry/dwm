@@ -84,7 +84,8 @@ static Key keys[] = {
 	// Focus
 	{ MODKEY,           XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,           XK_k,      focusstack,     {.i = -1 } },
-	{ MODKEY,           XK_a,      focusstack,     {.i = +1 } },
+	{ MODKEY,           XK_Tab,    focusstack,     {.i = +1 } },
+	{ MODKEY|ShiftMask, XK_Tab,    focusstack,     {.i = -1 } },
 	{ MODKEY,           XK_m,      focusmaster,    {0} },
 
 	// Zoom, swap
@@ -93,10 +94,10 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask, XK_k,      movestack,      {.i = -1 } },
 
 	// Rotate
-	{ MODKEY,           XK_Tab,    rotatestack,    {.i = +1 } },
-	{ MODKEY,           XK_Tab,    focusstack,     {.i = -1 } },
-	{ MODKEY|ShiftMask, XK_Tab,    rotatestack,    {.i = -1 } },
-	{ MODKEY|ShiftMask, XK_Tab,    focusstack,     {.i = +1 } },
+	{ MODKEY,           XK_grave,  rotatestack,    {.i = +1 } },
+	{ MODKEY,           XK_grave,  focusstack,     {.i = -1 } },
+	{ MODKEY|ShiftMask, XK_grave,  rotatestack,    {.i = -1 } },
+	{ MODKEY|ShiftMask, XK_grave,  focusstack,     {.i = +1 } },
 
 	// Master stack number
 	{ MODKEY,           XK_equal,  incnmaster,     {.i = +1 } },
