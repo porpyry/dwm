@@ -1,4 +1,0 @@
-#!/bin/sh
-rm $HOME/dwm/config.h ;
-  make -C $HOME/dwm &&
-  sudo make clean install -C $HOME/dwm

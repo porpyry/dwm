@@ -5,13 +5,13 @@ static const unsigned int borderpx = 2;        /* border pixel of windows */
 static const unsigned int snap     = 32;       /* snap pixel */
 static const int rmaster           = 1;        /* 1 means master-area is initially on the right */
 static const int showbar           = 0;        /* 0 means no bar */
-static const int topbar            = 0;        /* 0 means bottom bar */
-static const char *fonts[]         = { "JetBrains Mono:size=12" };
-static const char dmenufont[]      = "JetBrains Mono:size=12";
-static const char col_nf[]         = "#000000";
-static const char col_nb[]         = "#ffffff";
-static const char col_sf[]         = "#000000";
-static const char col_sb[]         = "#cccccc";
+static const int topbar            = 1;        /* 0 means bottom bar */
+static const char *fonts[]         = { "Noto Sans CJK KR:size=12" };
+static const char dmenufont[]      = "Noto Sans CJK KR:size=12";
+static const char col_nf[]         = "#a0a0a0";
+static const char col_nb[]         = "#000000";
+static const char col_sf[]         = "#ffffff";
+static const char col_sb[]         = "#000000";
 static const char col_nB[]         = "#000000";
 static const char col_sB[]         = "#ffffff";
 static const char *colors[][3]     = {
@@ -59,7 +59,7 @@ static const Layout layouts[] = {
 
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
-static const char *dmenucmd[]   = { "dmenu_run", "-b", "-m", dmenumon, "-fn", dmenufont, "-nb", col_nb, "-nf", col_nf, "-sb", col_sb, "-sf", col_sf, NULL };
+static const char *dmenucmd[]   = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_nb, "-nf", col_nf, "-sb", col_sb, "-sf", col_sf, NULL };
 static const char *termcmd[]    = { "alacritty", NULL };
 static const char *browsercmd[] = { "google-chrome-stable", NULL };
 static const char *editorcmd[]  = { "emacsclient", "-c", "-a", "", NULL };
@@ -75,7 +75,7 @@ static Key keys[] = {
 
 	// Programs
 	{ MODKEY,           XK_q,      spawn,          {.v = dmenucmd } },
-	{ MODKEY,           XK_a,      spawn,          {.v = termcmd } },
+	{ MODKEY,           XK_Return, spawn,          {.v = termcmd } },
 	{ MODKEY,           XK_n,      spawn,          {.v = browsercmd } },
 	{ MODKEY,           XK_e,      spawn,          {.v = editorcmd } },
 	{ MODKEY,           XK_b,      spawn,          {.v = bgimagecmd } },
@@ -83,10 +83,11 @@ static Key keys[] = {
 	// Focus
 	{ MODKEY,           XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,           XK_k,      focusstack,     {.i = -1 } },
+	{ MODKEY,           XK_a,      focusstack,     {.i = +1 } },
 	{ MODKEY,           XK_m,      focusmaster,    {0} },
 
 	// Zoom, swap
-	{ MODKEY,           XK_Return, zoom,           {0} },
+	{ MODKEY,           XK_backslash, zoom,        {0} },
 	{ MODKEY|ShiftMask, XK_j,      movestack,      {.i = +1 } },
 	{ MODKEY|ShiftMask, XK_k,      movestack,      {.i = -1 } },
 
@@ -109,7 +110,7 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask, XK_o,      setcfact,       {.f =  0.00} },
 
 	// Layout
-	{ MODKEY,           XK_v,      togglebar,      {0} },
+	{ MODKEY,           XK_d,      togglebar,      {0} },
 	{ MODKEY,           XK_f,      setlayout,      {.v = &layouts[1]} },
 	//{ MODKEY,           XK_space,  setlayout,      {0} }, // toggle layout
 	{ MODKEY,           XK_space,  togglefloating, {0} },
