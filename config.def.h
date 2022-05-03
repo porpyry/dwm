@@ -1,11 +1,12 @@
 /* See LICENSE file for copyright and license details. */
 
 /* appearance */
-static const unsigned int borderpx = 1;        /* border pixel of windows */
-static const unsigned int snap     = 32;       /* snap pixel */
-static const int rmaster           = 1;        /* 1 means master-area is initially on the right */
-static const int showbar           = 0;        /* 0 means no bar */
-static const int topbar            = 1;        /* 0 means bottom bar */
+static const unsigned int borderpx = 1;
+static const unsigned int gappx    = 1;
+static const unsigned int snap     = 32; /* snap pixel */
+static const int rmaster           = 1;  /* 1 means master-area is initially on the right */
+static const int showbar           = 0;  /* 0 means no bar */
+static const int topbar            = 1;  /* 0 means bottom bar */
 static const char *fonts[]         = { "Noto Sans CJK KR:size=12" };
 static const char dmenufont[]      = "Noto Sans CJK KR:size=12";
 static const char col_nf[]         = "#a0a0a0";
@@ -49,23 +50,27 @@ static const Layout layouts[] = {
 /* key definitions */
 #define MODKEY Mod4Mask
 #define TAGKEYS(KEY,TAG) \
-	{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
-	{ MODKEY|ControlMask,           KEY,      toggleview,     {.ui = 1 << TAG} }, \
-	{ MODKEY|ShiftMask,             KEY,      tag,            {.ui = 1 << TAG} }, \
-	{ MODKEY|ControlMask|ShiftMask, KEY,      toggletag,      {.ui = 1 << TAG} },
+	{ MODKEY,                       KEY, view,       {.ui = 1 << TAG} }, \
+	{ MODKEY|ControlMask,           KEY, toggleview, {.ui = 1 << TAG} }, \
+	{ MODKEY|ShiftMask,             KEY, tag,        {.ui = 1 << TAG} }, \
+	{ MODKEY|ControlMask|ShiftMask, KEY, toggletag,  {.ui = 1 << TAG} },
 
 /* helper for spawning shell commands in the pre dwm-5.0 fashion */
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
 
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
-static const char *dmenucmd[]   = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_nb, "-nf", col_nf, "-sb", col_sb, "-sf", col_sf, NULL };
-static const char *termcmd[]    = { "alacritty", NULL };
-static const char *browsercmd[] = { "google-chrome-stable", NULL };
-static const char *editorcmd[]  = { "emacsclient", "-c", "-a", "", NULL };
-static const char *bgimagecmd[]  = { "nitrogen", "--random", "--set-zoom-fill", NULL };
+static const char *dmenucmd[]     = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_nb, "-nf", col_nf, "-sb", col_sb, "-sf", col_sf, NULL };
+static const char *termcmd[]      = { "alacritty", NULL };
+static const char *browsercmd[]   = { "google-chrome-stable", NULL };
+static const char *incognitocmd[] = { "google-chrome-stable", "--incognito", NULL };
+static const char *editorcmd[]    = { "emacsclient", "-c", "-a", "", NULL };
+static const char *bgimagecmd[]   = { "nitrogen", "--random", "--set-zoom-fill", NULL };
 
-#include "movestack.c"
+static const char audiomutesh[]    = "pulsemixer --toggle-mute; if pulsemixer --get-mute | grep -Fq 1; then volnoti-show -m; else volnoti-show $(pulsemixer --get-volume | cut -d' ' -f1); fi";
+static const char audiovolupsh[]   = "pulsemixer --change-volume +5; pulsemixer --max-volume 100; volnoti-show $(pulsemixer --get-volume | cut -d' ' -f1)";
+static const char audiovoldownsh[] = "pulsemixer --change-volume -5; volnoti-show $(pulsemixer --get-volume | cut -d' ' -f1)";
+
 static Key keys[] = {
 	// System
 	{ MODKEY|ShiftMask, XK_r,      quit,           {0} }, // Refresh
@@ -77,6 +82,7 @@ static Key keys[] = {
 	{ MODKEY,           XK_q,      spawn,          {.v = dmenucmd } },
 	{ MODKEY,           XK_Return, spawn,          {.v = termcmd } },
 	{ MODKEY,           XK_n,      spawn,          {.v = browsercmd } },
+	{ MODKEY|ShiftMask, XK_n,      spawn,          {.v = incognitocmd } },
 	{ MODKEY,           XK_e,      spawn,          {.v = editorcmd } },
 	{ MODKEY,           XK_b,      spawn,          {.v = bgimagecmd } },
 
@@ -110,9 +116,9 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask, XK_o,      setcfact,       {.f =  0.00} },
 
 	// Layout
+	//{ MODKEY,           XK_space,  setlayout,      {0} }, // toggle layout
 	{ MODKEY,           XK_d,      togglebar,      {0} },
 	{ MODKEY,           XK_f,      setlayout,      {.v = &layouts[1]} },
-	//{ MODKEY,           XK_space,  setlayout,      {0} }, // toggle layout
 	{ MODKEY,           XK_space,  togglefloating, {0} },
 	{ MODKEY,           XK_r,      togglermaster,  {0} },
 
@@ -155,9 +161,12 @@ static Key keys[] = {
 	{ MODKEY|ControlMask|ShiftMask, XK_Right, moveresizeedge, {.v = "R"} },
 
 	// Audio
-	{ 0, XF86XK_AudioMute,        spawn, SHCMD("pulsemixer --toggle-mute; if pulsemixer --get-mute | grep -Fq 1; then volnoti-show -m; else volnoti-show $(pulsemixer --get-volume | cut -d' ' -f1); fi") },
-	{ 0, XF86XK_AudioRaiseVolume, spawn, SHCMD("pulsemixer --change-volume +5; pulsemixer --max-volume 100; volnoti-show $(pulsemixer --get-volume | cut -d' ' -f1)") },
-	{ 0, XF86XK_AudioLowerVolume, spawn, SHCMD("pulsemixer --change-volume -5; volnoti-show $(pulsemixer --get-volume | cut -d' ' -f1)") },
+	{ 0, XF86XK_AudioMute,        spawn, SHCMD(audiomutesh) },
+	{ 0, XF86XK_AudioRaiseVolume, spawn, SHCMD(audiovolupsh) },
+	{ 0, XF86XK_AudioLowerVolume, spawn, SHCMD(audiovoldownsh) },
+	{ MODKEY, XK_F5, spawn, SHCMD(audiomutesh) },
+	{ MODKEY, XK_F6, spawn, SHCMD(audiovoldownsh) },
+	{ MODKEY, XK_F7, spawn, SHCMD(audiovolupsh) },
 };
 
 /* button definitions */
