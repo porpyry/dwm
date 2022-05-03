@@ -871,6 +871,8 @@ findbefore(Client *c)
 void
 focus(Client *c)
 {
+	XWindowChanges wc;
+
 	if (!c || !ISVISIBLE(c))
 		for (c = selmon->stack; c && !ISVISIBLE(c); c = c->snext);
 	if (selmon->sel && selmon->sel != c)
@@ -884,6 +886,11 @@ focus(Client *c)
 		attachstack(c);
 		grabbuttons(c, 1);
 		XSetWindowBorder(dpy, c->win, scheme[SchemeSel][ColBorder].pixel);
+		if (!c->isfloating) {
+			wc.sibling = selmon->barwin;
+			wc.stack_mode = Below;
+			XConfigureWindow(dpy, c->win, CWSibling | CWStackMode, &wc);
+		}
 		setfocus(c);
 	} else {
 		XSetInputFocus(dpy, root, RevertToPointerRoot, CurrentTime);
@@ -1995,39 +2002,45 @@ tagmon(const Arg *arg)
 void
 tile(Monitor *m)
 {
-	unsigned int i, n, h, mw, my, ty;
+	unsigned int i, n, h, mw, my, ty, nm, ns;
 	float mfacts = 0, sfacts = 0;
 	Client *c;
 
+	nm = 0; ns = 0;
 	for (n = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), n++) {
-		if (n < m->nmaster)
+		if (n < m->nmaster) {
 			mfacts += c->cfact;
-		else
+			nm++;
+		} else {
 			sfacts += c->cfact;
+			ns++;
+		}
 	}
 	if (n == 0)
 		return;
 
 	if (n > m->nmaster)
-	    mw = m->nmaster
-			? m->ww * (m->rmaster ? 1.0 - m->mfact : m->mfact)
-			: 0;
+	    mw = m->nmaster ? (m->ww + borderpx) * (m->rmaster ? 1.0 - m->mfact : m->mfact) : 0;
 	else
 		mw = m->ww;
 	for (i = my = ty = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), i++)
 		if (i < m->nmaster) {
-			h = (m->wh - my) * (c->cfact / mfacts);
+			h = (m->wh + (nm-1)*c->bw - my) * (c->cfact / mfacts);
 			resize(c, m->rmaster ? m->wx + m->ww - mw : m->wx,
-				m->wy + my, mw - (2*c->bw), h - (2*c->bw), 0);
-			if (my + HEIGHT(c) < m->wh)
-				my += HEIGHT(c);
+				m->wy + my - i*c->bw,
+				mw - 2*borderpx,
+				h - 2*c->bw, 0);
+			if (my + h < m->wh)
+				my += h;
 			mfacts -= c->cfact;
 		} else {
-			h = (m->wh - ty) * (c->cfact / sfacts);
-			resize(c, m->rmaster ? m->wx : m->wx + mw, m->wy + ty,
-				m->ww - mw - (2*c->bw), h - (2*c->bw), 0);
-			if (ty + HEIGHT(c) < m->wh)
-				ty += HEIGHT(c);
+			h = (m->wh + (ns-1)*c->bw - ty) * (c->cfact / sfacts);
+			resize(c, m->rmaster ? m->wx : m->wx + mw - borderpx,
+				m->wy + ty - (i - m->nmaster)*c->bw,
+				m->ww - mw - borderpx,
+				h - 2*c->bw, 0);
+			if (ty + h < m->wh)
+				ty += h;
 			sfacts -= c->cfact;
 		}
 }
