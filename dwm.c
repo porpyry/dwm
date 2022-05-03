@@ -1218,7 +1218,7 @@ monocle(Monitor *m)
 	if (n > 0) /* override layout symbol */
 		snprintf(m->ltsymbol, sizeof m->ltsymbol, "[%d]", n);
 	for (c = nexttiled(m->clients); c; c = nexttiled(c->next))
-		resize(c, m->wx, m->wy, m->ww - 2 * c->bw, m->wh - 2 * c->bw, 0);
+		resize(c, m->wx, m->wy, m->ww, m->wh, 0);
 }
 
 void
@@ -1534,8 +1534,6 @@ resizeclient(Client *c, int x, int y, int w, int h)
 	wc.border_width = c->bw;
 	if ((&monocle == c->mon->lt[c->mon->sellt]->arrange) && (!c->isfloating)) {
 		wc.border_width = 0;
-		c->w = wc.width += c->bw * 2;
-		c->h = wc.height += c->bw * 2;
 	}
 	XConfigureWindow(dpy, c->win, CWX|CWY|CWWidth|CWHeight|CWBorderWidth, &wc);
 	configure(c);
@@ -1769,9 +1767,9 @@ setfullscreen(Client *c, int fullscreen)
 			return;
 		}
 		c->oldstate = c->isfloating;
+		c->isfloating = 1;
 		c->oldbw = c->bw;
 		c->bw = 0;
-		c->isfloating = 1;
 		resizeclient(c, c->mon->mx, c->mon->my, c->mon->mw, c->mon->mh);
 		XRaiseWindow(dpy, c->win);
 	} else if (!fullscreen && c->isfullscreen){
