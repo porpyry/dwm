@@ -95,9 +95,7 @@ static Key keys[] = {
 
 	// Rotate
 	{ MODKEY,           XK_grave,  rotatestack,    {.i = +1 } },
-	{ MODKEY,           XK_grave,  focusstack,     {.i = -1 } },
 	{ MODKEY|ShiftMask, XK_grave,  rotatestack,    {.i = -1 } },
-	{ MODKEY|ShiftMask, XK_grave,  focusstack,     {.i = +1 } },
 
 	// Master stack number
 	{ MODKEY,           XK_equal,  incnmaster,     {.i = +1 } },
