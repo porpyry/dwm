@@ -4,7 +4,7 @@
 static const unsigned int borderpx = 1;
 static const unsigned int gappx    = 8; /* gap >= border */
 static const unsigned int snap     = 32; /* snap pixel */
-static const int rmaster           = 0;  /* 1 means master-area is initially on the right */
+static const int rmaster           = 1;  /* 1 means master-area is initially on the right */
 static const int showbar           = 0;  /* 0 means no bar */
 static const int topbar            = 1;  /* 0 means bottom bar */
 static const char *fonts[]         = { "Noto Sans CJK KR:size=12" };
@@ -80,7 +80,7 @@ static Key keys[] = {
 
 	// Programs
 	{ MODKEY,           XK_q,      spawn,          {.v = dmenucmd } },
-	{ MODKEY,           XK_space,  spawn,          {.v = termcmd } },
+	{ MODKEY,           XK_Return, spawn,          {.v = termcmd } },
 	{ MODKEY,           XK_n,      spawn,          {.v = browsercmd } },
 	{ MODKEY|ShiftMask, XK_n,      spawn,          {.v = incognitocmd } },
 	{ MODKEY,           XK_e,      spawn,          {.v = editorcmd } },
@@ -95,7 +95,7 @@ static Key keys[] = {
 	{ MODKEY,           XK_a,      swapfocus,      {0} },
 
 	// Zoom, swap
-	{ MODKEY,           XK_Return, zoom,           {0} },
+	{ MODKEY,           XK_space,  zoom,           {0} },
 	{ MODKEY|ShiftMask, XK_j,      movestack,      {.i = +1 } },
 	{ MODKEY|ShiftMask, XK_k,      movestack,      {.i = -1 } },
 
@@ -120,6 +120,7 @@ static Key keys[] = {
 	{ MODKEY,           XK_d,      togglebar,      {0} },
 	{ MODKEY,           XK_f,      setlayout,      {.v = &layouts[1]} },
 	{ MODKEY,           XK_backslash, togglefloating, {0} },
+	{ MODKEY|ShiftMask, XK_backslash, movecenter,  {0} },
 	{ MODKEY,           XK_r,      togglermaster,  {0} },
 
 	// Monitors

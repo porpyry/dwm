@@ -193,6 +193,7 @@ static void mappingnotify(XEvent *e);
 static void maprequest(XEvent *e);
 static void monocle(Monitor *m);
 static void motionnotify(XEvent *e);
+static void movecenter(const Arg *arg);
 static void movemouse(const Arg *arg);
 static void moveresize(const Arg *arg);
 static void moveresizeedge(const Arg *arg);
@@ -1508,6 +1509,14 @@ movestack(const Arg *arg) {
 	}
 }
 
+void
+movecenter(const Arg *arg)
+{
+	selmon->sel->x = selmon->sel->mon->mx + (selmon->sel->mon->mw - WIDTH(selmon->sel)) / 2;
+	selmon->sel->y = selmon->sel->mon->my + (selmon->sel->mon->mh - HEIGHT(selmon->sel)) / 2;
+	arrange(selmon);
+}
+
 Client *
 nexttiled(Client *c)
 {
@@ -2069,7 +2078,10 @@ tile(Monitor *m)
 		return;
 
 	// mw + sw = m->ww + gappx
-	mw = (m->ww + gappx) * (m->rmaster ? 1.0 - m->mfact : m->mfact);
+	if (n <= m->nmaster)
+		mw = m->ww;
+	else
+		mw = (m->ww + gappx) * (m->rmaster ? 1.0 - m->mfact : m->mfact);
 
 	// resize: x, y include border, w, h exclude border
 	for (i = my = ty = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), i++)
@@ -2119,9 +2131,15 @@ togglefloating(const Arg *arg)
 	&&  !selmon->sel->isfakefullscreen) /* no support for fullscreen windows */
 		return;
 	selmon->sel->isfloating = !selmon->sel->isfloating || selmon->sel->isfixed;
-	if (selmon->sel->isfloating)
-		resize(selmon->sel, selmon->sel->x, selmon->sel->y,
-			selmon->sel->w, selmon->sel->h, 0);
+	if (selmon->sel->isfloating) {
+		selmon->sel->w = selmon->ww * 2 / 3;
+		selmon->sel->h = selmon->wh * 2 / 3;
+		selmon->sel->x = selmon->sel->mon->mx + (selmon->sel->mon->mw - WIDTH(selmon->sel)) / 2;
+		selmon->sel->y = selmon->sel->mon->my + (selmon->sel->mon->mh - HEIGHT(selmon->sel)) / 2;
+		resizeclient(selmon->sel, selmon->sel->x, selmon->sel->y,
+			   selmon->sel->w, selmon->sel->h);
+	}
+
 	arrange(selmon);
 }
 
