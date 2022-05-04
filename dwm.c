@@ -193,6 +193,7 @@ static void maprequest(XEvent *e);
 static void monocle(Monitor *m);
 static void motionnotify(XEvent *e);
 static void movecenter(const Arg *arg);
+static void resizecenter(const Arg *arg);
 static void movemouse(const Arg *arg);
 static void moveresize(const Arg *arg);
 static void moveresizeedge(const Arg *arg);
@@ -220,6 +221,7 @@ static void setup(void);
 static void seturgent(Client *c, int urg);
 static void showhide(Client *c);
 static void sigchld(int unused);
+static void sinkall(const Arg *arg);
 static void spawn(const Arg *arg);
 static void swapfocus();
 static void tag(const Arg *arg);
@@ -917,9 +919,7 @@ focusmaster(const Arg *arg)
 {
 	Client *c;
 
-	if (selmon->nmaster < 1)
-		return;
-	if (!selmon->sel)
+	if (selmon->nmaster < 1 && !selmon->sel)
 		return;
 
 	c = nexttiled(selmon->clients);
@@ -949,8 +949,6 @@ focusstack(const Arg *arg)
 {
 	Client *c = NULL, *i;
 
-	if (!selmon->sel || selmon->sel->isfloating)
-		return;
 	if (arg->i > 0) {
 		for (c = selmon->sel->next; c && !ISVISIBLE(c); c = c->next);
 		if (!c)
@@ -1461,28 +1459,25 @@ void
 movestack(const Arg *arg) {
 	Client *c = NULL, *p = NULL, *pc = NULL, *i;
 
-	if (selmon->sel && selmon->sel->isfloating)
-		return;
-
 	if(arg->i > 0) {
 		/* find the client after selmon->sel */
-		for(c = selmon->sel->next; c && (!ISVISIBLE(c) || c->isfloating); c = c->next);
+		for (c = selmon->sel->next; c && (!ISVISIBLE(c) || c->isfloating); c = c->next);
 		if(!c)
-			for(c = selmon->clients; c && (!ISVISIBLE(c) || c->isfloating); c = c->next);
+			for (c = selmon->clients; c && (!ISVISIBLE(c) || c->isfloating); c = c->next);
 
 	}
 	else {
 		/* find the client before selmon->sel */
-		for(i = selmon->clients; i != selmon->sel; i = i->next)
+		for (i = selmon->clients; i != selmon->sel; i = i->next)
 			if(ISVISIBLE(i) && !i->isfloating)
 				c = i;
 		if(!c)
-			for(; i; i = i->next)
+			for (; i; i = i->next)
 				if(ISVISIBLE(i) && !i->isfloating)
 					c = i;
 	}
 	/* find the client before selmon->sel and c */
-	for(i = selmon->clients; i && (!p || !pc); i = i->next) {
+	for (i = selmon->clients; i && (!p || !pc); i = i->next) {
 		if(i->next == selmon->sel)
 			p = i;
 		if(i->next == c)
@@ -1514,6 +1509,17 @@ movecenter(const Arg *arg)
 {
 	selmon->sel->x = selmon->sel->mon->mx + (selmon->sel->mon->mw - WIDTH(selmon->sel)) / 2;
 	selmon->sel->y = selmon->sel->mon->my + (selmon->sel->mon->mh - HEIGHT(selmon->sel)) / 2;
+	arrange(selmon);
+}
+
+void
+resizecenter(const Arg *arg)
+{
+	selmon->sel->w = selmon->ww * 2 / 3;
+	selmon->sel->h = selmon->wh * 2 / 3;
+	selmon->sel->x = selmon->sel->mon->mx + (selmon->sel->mon->mw - WIDTH(selmon->sel)) / 2;
+	selmon->sel->y = selmon->sel->mon->my + (selmon->sel->mon->mh - HEIGHT(selmon->sel)) / 2;
+	resizeclient(selmon->sel, selmon->sel->x, selmon->sel->y, selmon->sel->w, selmon->sel->h);
 	arrange(selmon);
 }
 
@@ -1848,29 +1854,13 @@ setlayout(const Arg *arg)
 	if (arg && arg->v && arg->v != selmon->lt[selmon->sellt ^ 1])
 		selmon->lt[selmon->sellt] = selmon->pertag->ltidxs[selmon->pertag->curtag][selmon->sellt] = (Layout *)arg->v;
 	strncpy(selmon->ltsymbol, selmon->lt[selmon->sellt]->symbol, sizeof selmon->ltsymbol);
-	if (selmon->sel) {
-		if (&monocle == selmon->lt[selmon->sellt]->arrange) {
-			selmon->sel->oldstate = selmon->sel->isfloating;
-			if (selmon->sel->isfloating) {
-				selmon->sel->oldx = selmon->sel->x;
-				selmon->sel->oldy = selmon->sel->y;
-				selmon->sel->oldw = selmon->sel->w;
-				selmon->sel->oldh = selmon->sel->h;
-				selmon->sel->isfloating = 0;
-			}
-		} else {
-			if (selmon->sel->oldstate) {
-				selmon->sel->oldstate = 0;
-				selmon->sel->isfloating = 1;
-				selmon->sel->x = selmon->sel->oldx;
-				selmon->sel->y = selmon->sel->oldy;
-				selmon->sel->w = selmon->sel->oldw;
-				selmon->sel->h = selmon->sel->oldh;
-				resizeclient(selmon->sel, selmon->sel->x, selmon->sel->y, selmon->sel->w, selmon->sel->h);
-			}
-		}
+
+	if (&monocle == selmon->lt[selmon->sellt]->arrange)
+		sinkall(0);
+
+	if (selmon->sel)
 		arrange(selmon);
-	} else
+	else
 		drawbar(selmon);
 }
 
@@ -1879,9 +1869,6 @@ void setcfact(const Arg *arg) {
 	Client *c;
 
 	c = selmon->sel;
-	if (c && c->isfloating)
-		return;
-
 	if(!arg || !c || !selmon->lt[selmon->sellt]->arrange)
 		return;
 	f = arg->f + c->cfact;
@@ -1899,8 +1886,6 @@ setmfact(const Arg *arg)
 {
 	float f;
 
-	if (selmon->sel && selmon->sel->isfloating)
-		return;
 	if (!arg || !selmon->lt[selmon->sellt]->arrange)
 		return;
 	f = arg->f < 1.0 ? arg->f + selmon->mfact : arg->f - 1.0;
@@ -2021,6 +2006,16 @@ sigchld(int unused)
 }
 
 void
+sinkall(const Arg *arg)
+{
+	Client *c;
+
+	for (c = selmon->clients; c; c = c->next)
+		c->isfloating = 0;
+	arrange(selmon);
+}
+
+void
 spawn(const Arg *arg)
 {
 	if (arg->v == dmenucmd)
@@ -2040,6 +2035,7 @@ void
 swapfocus()
 {
 	Client *c;
+
 	if (!selmon->sel)
 		return;
 	for (c = selmon->clients; c && c != prevclient; c = c->next) ;
@@ -2163,8 +2159,7 @@ togglefloating(const Arg *arg)
 		selmon->sel->h = selmon->wh * 2 / 3;
 		selmon->sel->x = selmon->sel->mon->mx + (selmon->sel->mon->mw - WIDTH(selmon->sel)) / 2;
 		selmon->sel->y = selmon->sel->mon->my + (selmon->sel->mon->mh - HEIGHT(selmon->sel)) / 2;
-		resizeclient(selmon->sel, selmon->sel->x, selmon->sel->y,
-			   selmon->sel->w, selmon->sel->h);
+		resizeclient(selmon->sel, selmon->sel->x, selmon->sel->y, selmon->sel->w, selmon->sel->h);
 	}
 	arrange(selmon);
 }
@@ -2173,7 +2168,6 @@ void
 togglermaster(const Arg *arg)
 {
 	selmon->rmaster = !selmon->rmaster;
-	/* now mfact represents the left factor */
 	selmon->mfact = 1.0 - selmon->mfact;
 	if (selmon->lt[selmon->sellt]->arrange)
 		arrange(selmon);
