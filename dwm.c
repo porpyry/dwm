@@ -170,7 +170,7 @@ static void drawbar(Monitor *m);
 static void drawbars(void);
 static void enqueue(Client *c);
 static void enqueuestack(Client *c);
-static void enternotify(XEvent *e);
+//static void enternotify(XEvent *e);
 static void expose(XEvent *e);
 static Client *findbefore(Client *c);
 static void focus(Client *c);
@@ -272,7 +272,7 @@ static void (*handler[LASTEvent]) (XEvent *) = {
 	[ConfigureRequest] = configurerequest,
 	[ConfigureNotify] = configurenotify,
 	[DestroyNotify] = destroynotify,
-	[EnterNotify] = enternotify,
+	//[EnterNotify] = enternotify,
 	[Expose] = expose,
 	[FocusIn] = focusin,
 	[KeyPress] = keypress,
@@ -829,6 +829,7 @@ enqueuestack(Client *c)
 	}
 }
 
+/*
 void
 enternotify(XEvent *e)
 {
@@ -847,6 +848,7 @@ enternotify(XEvent *e)
 		return;
 	focus(c);
 }
+*/
 
 void
 expose(XEvent *e)
