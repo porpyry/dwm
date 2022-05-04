@@ -2056,8 +2056,7 @@ tile(Monitor *m)
 	float mfacts = 0, sfacts = 0;
 	Client *c;
 
-	nm = 0; ns = 0;
-	for (n = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), n++) {
+	for (n = nm = ns = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), n++) {
 		if (n < m->nmaster) {
 			mfacts += c->cfact;
 			nm++;
@@ -2069,30 +2068,32 @@ tile(Monitor *m)
 	if (n == 0)
 		return;
 
-	if (n > m->nmaster)
-	    mw = m->nmaster ? (m->ww + borderpx) * (m->rmaster ? 1.0 - m->mfact : m->mfact) : 0;
-	else
-		mw = m->ww;
+	// mw + sw = m->ww + gappx
+	mw = (m->ww + gappx) * (m->rmaster ? 1.0 - m->mfact : m->mfact);
+
+	// resize: x, y include border, w, h exclude border
 	for (i = my = ty = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), i++)
 		if (i < m->nmaster) {
-			h = (m->wh + (nm-1)*c->bw - my) * (c->cfact / mfacts);
+			h = (m->wh + (nm - 1) * gappx - my) * (c->cfact / mfacts);
 			resize(c,
-				m->rmaster ? m->wx + m->ww - mw : m->wx, //x
-				m->wy + my - i*c->bw, //y
-				mw - 2*borderpx, //width
-				h - 2*c->bw, //height
+				m->wx + (m->rmaster ? m->ww - mw : 0) + gappx - borderpx, //x
+				m->wy + my - i * gappx                + gappx - borderpx, //y
+				mw - 2 * gappx, //width
+				h  - 2 * gappx, //height
 				0);
+			// m->ww - mw = (m->ww + gappx - mw) - gappx = sw - gappx
 			if (my + h < m->wh)
 				my += h;
 			mfacts -= c->cfact;
 		} else {
-			h = (m->wh + (ns-1)*c->bw - ty) * (c->cfact / sfacts);
+			h = (m->wh + (ns - 1) * gappx - ty) * (c->cfact / sfacts);
 			resize(c,
-				m->rmaster ? m->wx : m->wx + mw - borderpx, //x
-				m->wy + ty - (i - m->nmaster)*c->bw, //y
-				m->ww - mw - borderpx, //width
-				h - 2*c->bw, //height
+				m->wx + (m->rmaster ? 0 : mw - gappx) + gappx - borderpx, //x
+				m->wy + ty - (i - m->nmaster) * gappx + gappx - borderpx, //y
+				m->ww - mw - gappx, //width
+				h - 2 * gappx, //height
 				0);
+			// m->ww - mw - gappx = (m->ww + gappx - mw) - 2 * gappx = sw - 2 * gappx
 			if (ty + h < m->wh)
 				ty += h;
 			sfacts -= c->cfact;
