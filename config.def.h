@@ -3,20 +3,28 @@ static const unsigned int borderpx = 2;
 static const unsigned int gappx    = 8; // gap >= border
 static const unsigned int snap     = 32; // snap pixel
 static const int rmaster = 1; // 1 means master-area is initially on the right
-static const int showbar = 0; // 0 means no bar
+static const int showbar = 1; // 0 means no bar
 static const int topbar  = 1; // 0 means bottom bar
 static const char *fonts[] = { "Noto Sans CJK KR:size=12" };
 static const char dmenufont[] = "Noto Sans CJK KR:size=12";
-static const char col_nf[] = "#a0a0a0";
-static const char col_nb[] = "#000000";
-static const char col_sf[] = "#ffffff";
-static const char col_sb[] = "#000000";
-static const char col_nB[] = "#000000";
+static const char col_nf[] = "#000000";
+static const char col_nb[] = "#a0a0a0";
+static const char col_sf[] = "#000000";
+static const char col_sb[] = "#a0a0a0";
+static const char col_nB[] = "#404040";
 static const char col_sB[] = "#ffffff";
 static const char *colors[][3] = {
     [SchemeNorm] = { col_nf, col_nb, col_nB },
 	[SchemeSel]  = { col_sf, col_sb, col_sB },
 };
+static const unsigned int alphas[][3] = {
+	[SchemeNorm] = { OPAQUE, 0xc0, 0x80 },
+	[SchemeSel]  = { OPAQUE, 0xc0, 0x80 },
+};
+static const unsigned int ulinepad = 5; // horizontal padding between the underline and tag
+static const unsigned int ulinestroke = 2; // thickness / height of the underline
+static const unsigned int ulinevoffset = 0; // how far above the bottom of the bar the line should appear
+static const int ulineall = 0; // 1 to show underline on all tags, 0 for just the active ones
 
 /* layout */
 static const float mfact = 0.5; // factor of master area size [0.05..0.95]
