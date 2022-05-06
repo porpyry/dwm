@@ -1,16 +1,15 @@
 /* appearance */
-static const unsigned int borderpx = 2;
-static const unsigned int gappx    = 8; // gap >= border
+static const unsigned int borderpx = 1;
+static const unsigned int gappx    = 12; // gap >= border
 static const unsigned int snap     = 32; // snap pixel
 static const int rmaster = 1; // 1 means master-area is initially on the right
 static const int showbar = 1; // 0 means no bar
 static const int topbar  = 1; // 0 means bottom bar
-static const char *fonts[] = { "Noto Sans CJK KR:size=12" };
-static const char dmenufont[] = "Noto Sans CJK KR:size=12";
-static const char col_nf[] = "#000000";
-static const char col_nb[] = "#a0a0a0";
-static const char col_sf[] = "#000000";
-static const char col_sb[] = "#a0a0a0";
+static const char *fonts[] = { "Noto Sans Mono CJK KR:size=12" };
+static const char col_nf[] = "#ffffff";
+static const char col_nb[] = "#000000";
+static const char col_sf[] = "#ffffff";
+static const char col_sb[] = "#000000";
 static const char col_nB[] = "#404040";
 static const char col_sB[] = "#ffffff";
 static const char *colors[][3] = {
@@ -18,8 +17,8 @@ static const char *colors[][3] = {
 	[SchemeSel]  = { col_sf, col_sb, col_sB },
 };
 static const unsigned int alphas[][3] = {
-	[SchemeNorm] = { OPAQUE, 0xc0, 0x80 },
-	[SchemeSel]  = { OPAQUE, 0xc0, 0x80 },
+	[SchemeNorm] = { OPAQUE, 0xb0, 0x80 },
+	[SchemeSel]  = { OPAQUE, 0xb0, 0x80 },
 };
 static const unsigned int ulinepad = 5; // horizontal padding between the underline and tag
 static const unsigned int ulinestroke = 2; // thickness / height of the underline
@@ -37,8 +36,8 @@ static const Rule rules[] = {
 	// xprop(1):
 	//   WM_CLASS(STRING) = instance, class
 	//   WM_NAME(STRING) = title
-	// class           instance title tags mask isfloating monitor
-	{}
+	// class, instance, title, tags mask, isfloating, monitor
+	{ "", NULL, NULL, 0, 0, -1 },
 };
 
 static const Layout layouts[] = {
@@ -61,10 +60,10 @@ static const Layout layouts[] = {
 
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
-static const char *dmenucmd[]     = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_nb, "-nf", col_nf, "-sb", col_sb, "-sf", col_sf, NULL };
+static const char *dmenucmd[]     = { "dmenu_run", "-m", dmenumon, NULL };
 static const char *termcmd[]      = { "alacritty", NULL };
-static const char *browsercmd[]   = { "google-chrome-stable", NULL };
-static const char *incognitocmd[] = { "google-chrome-stable", "--incognito", NULL };
+static const char *browsercmd[]   = { "brave", NULL };
+static const char *incognitocmd[] = { "brave", "--incognito", NULL };
 static const char *editorcmd[]    = { "emacsclient", "-c", "-a", "", NULL };
 static const char *bgimagecmd[]   = { "nitrogen", "--random", "--set-zoom-fill", NULL };
 
