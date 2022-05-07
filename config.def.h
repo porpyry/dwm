@@ -208,6 +208,10 @@ static Key keys[] = {
 	{ MODKEY, XK_F5,                    spawn, SHCMD(audiomutesh) },
 	{ MODKEY, XK_F6,                    spawn, SHCMD(audiovoldownsh) },
 	{ MODKEY, XK_F7,                    spawn, SHCMD(audiovolupsh) },
+
+	//
+	{ 0,      XF86XK_Sleep,   spawn, SHCMD("xset dpms force off") },
+	{ MODKEY, XK_F12,         spawn, SHCMD("xset dpms force off") },
 };
 
 /* button definitions */
