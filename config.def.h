@@ -10,14 +10,14 @@ static const char col_nf[] = "#ffffff";
 static const char col_nb[] = "#000000";
 static const char col_sf[] = "#ffffff";
 static const char col_sb[] = "#000000";
-static const char col_nB[] = "#404040";
+static const char col_nB[] = "#000000";
 static const char col_sB[] = "#ffffff";
 static const char *colors[][3] = {
-    [SchemeNorm] = { col_nf, col_nb, col_nB },
+	[SchemeNorm] = { col_nf, col_nb, col_nB },
 	[SchemeSel]  = { col_sf, col_sb, col_sB },
 };
 static const unsigned int alphas[][3] = {
-	[SchemeNorm] = { OPAQUE, 0xb0, 0x80 },
+	[SchemeNorm] = { OPAQUE, 0xb0, 0x00 },
 	[SchemeSel]  = { OPAQUE, 0xb0, 0x80 },
 };
 static const unsigned int ulinepad = 5; // horizontal padding between the underline and tag
@@ -41,10 +41,9 @@ static const Rule rules[] = {
 };
 
 static const Layout layouts[] = {
-	/* symbol arrange function */
-	{ "[]=",  tile },    /* first entry is default */
+	{ "[]=",  tile }, /* first entry is default */
 	{ "[M]",  monocle },
-	//{ "><>",  NULL },    /* no layout function means floating behavior */
+	//{ "><>",  NULL }, /* no layout function means floating behavior */
 };
 
 /* key definitions */
@@ -114,6 +113,12 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_h,         setcfact,       {.f = +0.15} },
 	{ MODKEY|ShiftMask,             XK_l,         setcfact,       {.f = -0.15} },
 	{ MODKEY|ShiftMask,             XK_o,         setcfact,       {.f =  0.00} },
+
+	// Gap, Border
+	{ MODKEY,                       XK_bracketleft,  setborderpx, {.i = -1} },
+	{ MODKEY,                       XK_bracketright, setborderpx, {.i = 1} },
+	{ MODKEY|ShiftMask,             XK_bracketleft,  setgappx,    {.i = -1} },
+	{ MODKEY|ShiftMask,             XK_bracketright, setgappx,    {.i = 1} },
 
 	// Layout
 	{ MODKEY,                       XK_d,         togglebar,      {0} },
