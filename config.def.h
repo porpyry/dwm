@@ -1,6 +1,6 @@
 /* appearance */
 static const unsigned int borderpx = 1;
-static const unsigned int gappx    = 12; // gap >= border
+static const unsigned int gappx    = 1; // gap >= border
 static const unsigned int snap     = 32; // snap pixel
 static const int rmaster = 1; // 1 means master-area is initially on the right
 static const int showbar = 1; // 0 means no bar
@@ -9,7 +9,7 @@ static const char *fonts[] = { "Noto Sans Mono CJK KR:size=12" };
 static const char col_nf[] = "#ffffff";
 static const char col_nb[] = "#000000";
 static const char col_sf[] = "#ffffff";
-static const char col_sb[] = "#000000";
+static const char col_sb[] = "#404040";
 static const char col_nB[] = "#000000";
 static const char col_sB[] = "#ffffff";
 static const char *colors[][3] = {
@@ -20,7 +20,7 @@ static const unsigned int alphas[][3] = {
 	[SchemeNorm] = { OPAQUE, 0xb0, 0x00 },
 	[SchemeSel]  = { OPAQUE, 0xb0, 0x80 },
 };
-static const unsigned int ulinepad = 5; // horizontal padding between the underline and tag
+static const unsigned int ulinepad = 0; // horizontal padding between the underline and tag
 static const unsigned int ulinestroke = 2; // thickness / height of the underline
 static const unsigned int ulinevoffset = 0; // how far above the bottom of the bar the line should appear
 static const int ulineall = 0; // 1 to show underline on all tags, 0 for just the active ones
@@ -123,6 +123,8 @@ static Key keys[] = {
 	// Layout
 	{ MODKEY,                       XK_d,         togglebar,      {0} },
 	{ MODKEY,                       XK_f,         setlayout,      {.v = &layouts[1]} },
+	{ MODKEY|ShiftMask,             XK_f,         setlayout,      {.v = &layouts[1]} },
+	{ MODKEY|ShiftMask,             XK_f,         togglebar,      {0} },
 	{ MODKEY,                       XK_r,         togglermaster,  {0} },
 	{ MODKEY,                       XK_KP_Begin,  togglefloating, {0} },
 	{ MODKEY|ShiftMask,             XK_KP_Begin,  sinkall,        {0} },
