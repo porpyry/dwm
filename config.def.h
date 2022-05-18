@@ -68,6 +68,7 @@ static const char *incognitocmd[] = { "brave", "--incognito", NULL };
 static const char *editorcmd[]    = { "emacs", NULL };
 static const char *fmcmd[]        = { "pcmanfm", NULL };
 static const char *bgimagecmd[]   = { "nitrogen", "--random", "--set-zoom-fill", NULL };
+static const char *prtscrcmd[]    = { "flameshot", "screen", NULL };
 
 static const char audiomutesh[]    = "pulsemixer --toggle-mute; if pulsemixer --get-mute | grep -Fq 1; then volnoti-show -m; else volnoti-show $(pulsemixer --get-volume | cut -d' ' -f1); fi";
 static const char audiovolupsh[]   = "pulsemixer --change-volume +5; pulsemixer --max-volume 100; volnoti-show $(pulsemixer --get-volume | cut -d' ' -f1)";
@@ -89,6 +90,7 @@ static Key keys[] = {
 	{ MODKEY,                       XK_e,         spawn,          {.v = editorcmd } },
 	{ MODKEY|ShiftMask,             XK_e,         spawn,          {.v = fmcmd } },
 	{ MODKEY,                       XK_b,         spawn,          {.v = bgimagecmd } },
+	{ 0,                            XK_Print,     spawn,          {.v = prtscrcmd } },
 
 	// Focus
 	{ MODKEY,                       XK_j,         focusstack,     {.i = +1 } },
