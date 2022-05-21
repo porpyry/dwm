@@ -7,10 +7,10 @@ static const int rmaster = 0;
 static const int showbar = 1;
 static const int topbar  = 1;
 static const char *fonts[] = { "Noto Sans Mono CJK KR:size=12" };
-static const char col_nf[] = "#eeeeee";
+static const char col_nf[] = "#ffffff";
 static const char col_nb[] = "#000000";
-static const char col_sf[] = "#eeeeee";
-static const char col_sb[] = "#404040";
+static const char col_sf[] = "#ffffff";
+static const char col_sb[] = "#000000";
 static const char col_nB[] = "#000000";
 static const char col_sB[] = "#ffffff";
 static const char *colors[][3] = {
