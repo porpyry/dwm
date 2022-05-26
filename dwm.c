@@ -1210,21 +1210,33 @@ keypress(XEvent *e)
 void
 killclient(const Arg *arg)
 {
-	Client *c = selmon->sel, *j = NULL, *i;
+	Client *c = selmon->sel, *nc = NULL, *i;
 	if (!c)
 		return;
-	if (arg->i == -1) {
+
+	if (arg->i >= 0) {
+		for (nc = c->next; nc && !ISVISIBLE(nc); nc = nc->next);
+		if (!nc)
+			for (nc = selmon->clients; nc && !ISVISIBLE(nc); nc = nc->next);
+	} else {
 		for (i = selmon->clients; i != selmon->sel; i = i->next)
 			if (ISVISIBLE(i))
-				j = i;
-		if (!j)
+				nc = i;
+		if (!nc)
 			for (; i; i = i->next)
 				if (ISVISIBLE(i))
-					j = i;
-		if (j == c)
-			return;
-		c = j;
+					nc = i;
 	}
+
+	if (arg->i == 0) {
+		detachstack(nc);
+		attachstack(nc);
+	} else {
+		if (c == nc)
+			return;
+		c = nc;
+	}
+
 	if (!sendevent(c, wmatom[WMDelete])) {
 		XGrabServer(dpy);
 		XSetErrorHandler(xerrordummy);
@@ -2381,8 +2393,6 @@ unmanage(Client *c, int destroyed)
 {
 	Monitor *m = c->mon;
 	XWindowChanges wc;
-	Client *nc;
-	for (nc = c->next; nc && !ISVISIBLE(nc); nc = nc->next);
 
 	if (c->swallowing) {
 		unswallow(c);
@@ -2415,7 +2425,7 @@ unmanage(Client *c, int destroyed)
 
 	if (!s) {
 		arrange(m);
-		focus(nc);
+		focus(NULL);
 		updateclientlist();
 	}
 }
