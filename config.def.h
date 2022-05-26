@@ -80,6 +80,7 @@ static const char audiovoldownsh[] = "pulsemixer --change-volume -5; volnoti-sho
 static Key keys[] = {
 	// System
 	{ MODKEY,                       XK_w,         killclient,     {0} },
+	{ MODKEY|ShiftMask,             XK_w,         killclient,     {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_r,         quit,           {0} }, // Refresh
 	{ MODKEY|ShiftMask|ControlMask, XK_q,         spawn,          SHCMD("sudo poweroff") },
 	{ MODKEY|ShiftMask|ControlMask, XK_r,         spawn,          SHCMD("sudo reboot") },
